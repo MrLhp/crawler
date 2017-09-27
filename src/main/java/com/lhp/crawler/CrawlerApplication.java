@@ -1,4 +1,4 @@
-package com.liuhp.crawler;
+package com.lhp.crawler;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

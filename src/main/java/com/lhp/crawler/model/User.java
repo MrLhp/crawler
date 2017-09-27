@@ -1,5 +1,6 @@
-package model;
+package com.lhp.crawler.model;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.NotBlank;
@@ -9,8 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
-@Setter
-@Getter
+@Data
 @Entity
 public class User {
     @Id
