@@ -2,20 +2,16 @@ package com.lhp.crawler.processor;
 
 import com.lhp.crawler.model.Movies;
 import com.lhp.crawler.repository.MoviesRepository;
-import com.lhp.crawler.utils.MoviesUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.Spider;
 import us.codecraft.webmagic.processor.PageProcessor;
-import us.codecraft.webmagic.selector.Selectable;
 
-import java.security.PublicKey;
 import java.util.List;
 
 @Slf4j
@@ -32,15 +28,22 @@ public class MoviesPageProcessor implements PageProcessor {
     private final String searchUrl = "http://piaofang.maoyan.com/search?key=REPLACE_KEY&page=0&size=300";
     @Override
     public void process(Page page) {
-        List<String> all = page.getHtml().xpath("//*[@id=\"search-list\"]/article").all();
+
+        if (page.getUrl().toString().contains("&page=0&size=300")) {//搜索结果页面处理
+            searchResultPorcess(page);
+        }
+    }
+
+    private void searchResultPorcess(Page page) {
+        List<String> movieInfoUrl = page.getHtml().xpath("//*[@id=\"search-list\"]/article").all();
         String regex = page.getUrl().regex("key=([^&]*)").toString();
-        if (all == null || all.isEmpty() || all.size()==0) {
-            System.out.println("该影片没有匹配成功："+regex);
+        if (movieInfoUrl == null || movieInfoUrl.isEmpty() || movieInfoUrl.size()==0) {
+            this.log.warn("该影片没有匹配成功："+regex);
             return;
         }
-        for (String s : all) {
+        for (String s : movieInfoUrl) {
             Document doc = Jsoup.parse(s);
-            System.out.println(regex+"-匹配url为:"+doc.select("article").attr("data-url"));
+            this.log.info("《"+regex+"》-匹配url为:"+doc.select("article").attr("data-url"));
         }
     }
 
