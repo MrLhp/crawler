@@ -8,4 +8,6 @@ import java.util.List;
 public interface MoviesRepository extends JpaRepository<Movies,Long> {
     @Override
     List<Movies> findAll();
+
+    Movies findByCode(String code);
 }

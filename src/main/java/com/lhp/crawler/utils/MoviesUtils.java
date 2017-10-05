@@ -1,6 +1,80 @@
 package com.lhp.crawler.utils;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.env.YamlPropertySourceLoader;
+import org.springframework.stereotype.Component;
+
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.net.URL;
+import java.util.Date;
+
+@Slf4j
+@Component
 public class MoviesUtils {
+
+    SystemConfig systemConfig = new SystemConfig();
+
+    public static String downloadImg(String src, String name, String title)  {
+        try {
+            URL url = new URL("http:"+src);
+            InetSocketAddress addr = new InetSocketAddress("forward.xdaili.cn", 80);
+            Proxy proxy = new Proxy(Proxy.Type.HTTP, addr);
+            HttpURLConnection conn = (HttpURLConnection)url.openConnection(proxy);
+
+            int timestamp = (int) (new Date().getTime() / 1000);
+            String headerKey = "Proxy-Authorization";
+            String authHeader = authHeader(SystemConfig.getProperty("proxy.orderno"), SystemConfig.getProperty("proxy.secret"), timestamp);
+
+            conn.setRequestProperty(headerKey,authHeader);
+            //设置超时间为5秒
+            conn.setConnectTimeout(5000);
+            //防止屏蔽程序抓取而返回403错误
+            conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
+            //conn.setRequestProperty("Cookie", Constans.CookieByOld);
+            //得到输入流
+            InputStream inputStream = conn.getInputStream();
+            //获取自己数组
+            byte[] getData = readInputStream(inputStream);
+
+            //文件保存位置
+            File saveDir = new File(SystemConfig.getProperty("img.dir"));
+            if(!saveDir.exists()){
+                saveDir.mkdir();
+            }
+            File file = new File(saveDir+File.separator+name+".jpg");
+
+            FileOutputStream fos = new FileOutputStream(file);
+            fos.write(getData);
+            if(fos!=null){
+                fos.close();
+            }
+            if(inputStream!=null){
+                inputStream.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "-1";
+        }
+
+        MoviesUtils.log.info(String.format("《%s-%s》下载成功",name,title));
+        return "0";
+    }
+
+    private static  byte[] readInputStream(InputStream inputStream) throws IOException {
+        byte[] buffer = new byte[1024];
+        int len = 0;
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        while((len = inputStream.read(buffer)) != -1) {
+            bos.write(buffer, 0, len);
+        }
+        bos.close();
+        return bos.toByteArray();
+    }
 
     public static String parseMillisecone(long millisecond) {
         String time = null;
@@ -40,5 +114,17 @@ public class MoviesUtils {
             e.printStackTrace();
         }
         return time;
+    }
+
+    public static String authHeader(String orderno, String secret, int timestamp) {
+        //拼装签名字符串
+        String planText = String.format("orderno=%s,secret=%s,timestamp=%d", orderno, secret, timestamp);
+
+        //计算签名
+        String sign = org.apache.commons.codec.digest.DigestUtils.md5Hex(planText).toUpperCase();
+
+        //拼装请求头Proxy-Authorization的值
+        String authHeader = String.format("sign=%s&orderno=%s&timestamp=%d", sign, orderno, timestamp);
+        return authHeader;
     }
 }
