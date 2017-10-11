@@ -37,14 +37,14 @@ public class MoviesImgPageProcessor implements PageProcessor {
     @Override
     public void process(Page page) {
 
+        String code = page.getRequest().getHeaders().get("code");
         Elements movieImg = page.getHtml().getDocument().select("img.need-handle-pic");
         if (movieImg == null || movieImg.size() <= 0) {
-            this.log.info("没有获取到指定的节点[img]，请重新分析dom结构。");
+            this.log.info("没有获取到指定的节点[img]，请重新分析dom结构。"+code);
             return;
         }
         final String src = movieImg.attr("src");
         final String title = movieImg.attr("alt");
-        String code = page.getRequest().getHeaders().get("code");
         String res = MoviesUtils.downloadImg(src, code, title);
         if (res.equals("0")) {
             Movies movie = moviesRepository.findByCode(code);
