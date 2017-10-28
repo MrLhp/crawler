@@ -29,7 +29,7 @@ public class MoviesImgPageProcessor implements PageProcessor {
     private final String authHeader = authHeader(SystemConfig.getProperty("proxy.orderno"), SystemConfig.getProperty("proxy.secret"), timestamp);
     private Site site = Site.me()
             .setDomain("http://piaofang.maoyan.com")
-            .setSleepTime(5000)
+            .setSleepTime(10000)
             .setCharset("utf-8")
             .setTimeOut(5000)
             .addHeader("Proxy-Authorization", authHeader)

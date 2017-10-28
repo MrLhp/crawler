@@ -6,6 +6,7 @@ import com.lhp.crawler.repository.MoviesRepository;
 import com.lhp.crawler.utils.MoviesUtils;
 import com.lhp.crawler.utils.SystemConfig;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -24,10 +25,7 @@ import us.codecraft.webmagic.proxy.SimpleProxyProvider;
 import us.codecraft.webmagic.scheduler.PriorityScheduler;
 import us.codecraft.webmagic.scheduler.Scheduler;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -56,7 +54,7 @@ public class MoviesPageProcessor implements PageProcessor {
     private final String authHeader = authHeader(SystemConfig.getProperty("proxy.orderno"), SystemConfig.getProperty("proxy.secret"), timestamp);
     private Site site = Site.me()
             .setDomain("http://piaofang.maoyan.com")
-            .setSleepTime(5000)
+            .setSleepTime(10000)
             .setCharset("utf-8")
             .setTimeOut(5000)
             .addHeader("Proxy-Authorization", authHeader)
@@ -155,7 +153,7 @@ public class MoviesPageProcessor implements PageProcessor {
             scheduler.push(new Request(searchUrl.replace("REPLACE_KEY", movies.getName()))
                     .addHeader("code", movies.getCode()).setPriority(1), spider);
         }
-        spider.thread(5).run();
+        spider.thread(3).run();
         /*for (int i = 0; i < 10; i++) {
             scheduler.push(new Request(searchUrl.replace("REPLACE_KEY", moviesList.get(i).getName()))
                     .addHeader("code", moviesList.get(i).getCode()).setPriority(1), spider);
