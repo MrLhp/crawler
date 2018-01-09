@@ -36,8 +36,8 @@ public class MaoyanTest implements PageProcessor {
 
         Spider cnSpider = Spider.create(this).setDownloader(new SeleniumDownloader(5000,null,new TestAction()))
 //                .addUrl("https://shop34068488.taobao.com/?spm=a230r.7195193.1997079397.2.JLFlPa")
-//                .addUrl("http://piaofang.maoyan.com/company/cinema?date=2017-01-18&webCityId=288&cityTier=0&page=1&cityName=%E6%8F%AD%E9%98%B3");
-                .addUrl("http://piaofang.maoyan.com/company/cinema?date=2017-07-12&webCityId=10&cityTier=0&page=1&cityName=%25E4%25B8%258A%25E6%25B5%25B7&typeId=0&noSum=0");
+                .addUrl("http://piaofang.maoyan.com/company/invest?typeId=0&date=2017-08-02&webCityId=0&cityTier=0&page=1&noSum=0&cityName=%25E5%2585%25A8%25E5%259B%25BD");
+//                .addUrl("http://piaofang.maoyan.com/company/cinema?date=2017-07-12&webCityId=10&cityTier=0&page=1&cityName=%25E4%25B8%258A%25E6%25B5%25B7&typeId=0&noSum=0");
 //                .addPipeline(new JsonFilePipeline("D:\\data\\webmagicfile.json"))
 
         //SpiderMonitor.instance().register(cnSpider);
@@ -58,7 +58,7 @@ public class MaoyanTest implements PageProcessor {
                 //wait.until(ExpectedConditions.presenceOfElementLocated(By.id("J_PromoPriceNum")));
 
                 File src=((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
-                String srcfile="D:\\data\\"+ UUID.randomUUID().toString()+".png";
+                String srcfile="/home/haipei/data/"+ UUID.randomUUID().toString()+".png";
                 FileUtils.copyFile(src, new File(srcfile));
                 List<WebElement> movielist=driver.findElements(By.xpath("//*[@id='cinema-tbody']/tr"));
 //                movielist.remove(0);
@@ -71,11 +71,11 @@ public class MaoyanTest implements PageProcessor {
 
                     Point loc=tel.getLocation();
                     Dimension d=tel.getSize();
-                    String cop_path="D:\\data\\crop\\current_piaofang_"+movieName+".png";
+                    String cop_path="/home/haipei/data/crop/current_piaofang_"+movieName+".png";
                     ImageUtil.crop(srcfile, cop_path, new ImageRegion(loc.x, loc.y, d.width+10, d.height));
-                    System.out.println(TesseractOcrUtil.getByLangNum(cop_path));
-                    FileUtils.deleteQuietly(new File(srcfile));
+                    System.out.println(TesseractOcrUtil.getByLangChi(cop_path));
                 }
+                FileUtils.deleteQuietly(new File(srcfile));
 
             } catch (IOException e) {
                 // TODO Auto-generated catch block

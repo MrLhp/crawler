@@ -23,7 +23,7 @@ public class ScreenHotTest {
     @BeforeClass
     public static void setupClass() {
         System.setProperty("phantomjs.binary.path",
-                "D:\\haipei\\devEnv\\phantomjs-2.5.0-beta2-windows\\bin\\phantomjs.exe");
+                "/home/haipei/dev/phantomjs-2.5.0-beta-ubuntu-xenial/bin/phantomjs");
     }
 
     @Before

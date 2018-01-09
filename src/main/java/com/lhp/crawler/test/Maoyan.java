@@ -30,7 +30,7 @@ public class Maoyan {
                         + "User-Agent",
                 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.62 Safari/537.36");
         //驱动支持
-        dcaps.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY,"D:\\haipei\\devEnv\\phantomjs-2.5.0-beta2-windows\\bin\\phantomjs.exe");
+        dcaps.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY,"/home/haipei/dev/phantomjs-2.5.0-beta-ubuntu-xenial/bin/phantomjs");
         //创建无界面浏览器对象
 
         PhantomJSDriver driver = new PhantomJSDriver(dcaps);
@@ -38,10 +38,10 @@ public class Maoyan {
         try {
             driver.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
             //让浏览器访问猫眼票房页面
-            driver.get("http://piaofang.maoyan.com/?ver=normal");
+            driver.get("www.baidu.com");
 
             File src=((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
-            String srcfile="D:\\data\\"+ UUID.randomUUID().toString()+".png";
+            String srcfile="/home/haipei/data/"+ UUID.randomUUID().toString()+".png";
             FileUtils.copyFile(src, new File(srcfile));
         } catch (IOException e) {
             e.printStackTrace();

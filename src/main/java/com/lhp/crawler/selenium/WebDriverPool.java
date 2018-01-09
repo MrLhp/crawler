@@ -27,7 +27,7 @@ public class WebDriverPool {
     private static String PHANTOMJS_PATH;
     private static DesiredCapabilities caps = DesiredCapabilities.phantomjs();
     static {
-        PHANTOMJS_PATH = "D:\\haipei\\devEnv\\phantomjs\\bin\\phantomjs.exe";
+        PHANTOMJS_PATH = "/home/haipei/dev/phantomjs-2.5.0-beta-ubuntu-xenial/bin/phantomjs";
         caps.setJavascriptEnabled(true);
         caps.setCapability(
                 PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY,

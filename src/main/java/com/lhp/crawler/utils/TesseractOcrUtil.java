@@ -7,14 +7,16 @@ import org.apache.commons.io.IOUtils;
 import java.io.*;
 import java.util.UUID;
 
+import static com.sun.deploy.cache.Cache.exists;
+
 @Slf4j
 public class TesseractOcrUtil {
     private static final String tessPath;
     private static final String basePath;
 
     static {
-        tessPath = "C:\\Program Files (x86)\\Tesseract-OCR\\tesseract.exe";
-        basePath = "d:\\data";
+        tessPath = "tesseract";
+        basePath = "/home/haipei/data";
     }
     public static String getByLangNum(String imagePath) {
         return get(imagePath, "num");
@@ -31,12 +33,12 @@ public class TesseractOcrUtil {
     public static String get(String imagePath, String lang) {
         String outName = UUID.randomUUID().toString();
         String outPath = basePath + File.separator
-                + outName + ".txt";
+                + outName;
 //        String cmd = tessPath + " " + imagePath + " " + outName + " -l " + lang;
         ProcessBuilder pb = new ProcessBuilder();
 //        pb.directory(new File(basePath));
 
-        pb.command(tessPath,imagePath,outName,"-l",lang);
+        pb.command(tessPath,imagePath,outPath,"-l",lang);
 
         pb.redirectErrorStream(true);
 
@@ -46,11 +48,13 @@ public class TesseractOcrUtil {
         try {
             process = pb.start();
             // tesseract.exe 1.jpg 1 -l chi_sim
+            //http://www.cnblogs.com/zhongtang/p/5555950.html
+            //tesseract 4.tiff 1 -l chi_sim -psm 7 batch.nochop
             int excode = process.waitFor();
 
             if (excode == 0) {
                 BufferedReader in = new BufferedReader(new InputStreamReader(
-                        new FileInputStream(outPath), "UTF-8"));
+                        new FileInputStream(outPath+".txt"), "UTF-8"));
                 res = in.readLine();
                 IOUtils.closeQuietly(in);
             } else {
