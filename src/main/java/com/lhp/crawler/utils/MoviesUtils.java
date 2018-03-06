@@ -46,6 +46,12 @@ public class MoviesUtils {
             if(!saveDir.exists()){
                 saveDir.mkdir();
             }
+            String[] invalidCs = { "\\", "/", ":", "*", "?", "\"", "<", ">", "|", "”", "." };
+            for (String c : invalidCs) {
+                if (name.contains(String.valueOf(c))) {
+                    name = name.replace(c, "#");
+                }
+            }
             File file = new File(saveDir+File.separator+name+".jpg");
 
             FileOutputStream fos = new FileOutputStream(file);
