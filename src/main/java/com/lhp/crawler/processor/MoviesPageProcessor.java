@@ -107,12 +107,7 @@ public class MoviesPageProcessor implements PageProcessor {
                     movie.setStatus(MoviesStatus.匹配成功);
                     movie.setUrl(site.getDomain()+detailUrl);
                     moviesRepository.save(movie);
-                } else {
-                    if (m.find()) {
-                        resMap.put(searchKeyName + m.group(1), detailUrl);
-                    } else {
-                        resMap.put(searchKeyName, detailUrl);
-                    }
+                } else{
                     resMap.put(detailUrl, code);
                     this.log.warn(String.format("日期年份不匹配：[%s]:[%s]", onDays, year));
                 }
@@ -153,7 +148,11 @@ public class MoviesPageProcessor implements PageProcessor {
             scheduler.push(new Request(searchUrl.replace("REPLACE_KEY", movies.getName()))
                     .addHeader("code", movies.getCode()).setPriority(1), spider);
         }
-        spider.thread(3).run();
+        try {
+            spider.start();
+        } catch (Exception e) {
+            this.log.info("wocao!!!");
+        }
         /*for (int i = 0; i < 10; i++) {
             scheduler.push(new Request(searchUrl.replace("REPLACE_KEY", moviesList.get(i).getName()))
                     .addHeader("code", moviesList.get(i).getCode()).setPriority(1), spider);

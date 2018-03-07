@@ -1,5 +1,6 @@
 package com.lhp.crawler.utils;
 
+import com.lhp.crawler.repository.MoviesRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -66,7 +67,7 @@ public class MoviesUtils {
             e.printStackTrace();
             return "-1";
         }
-
+        //todo:下载成功保存到数据库remark字段
         MoviesUtils.log.info(String.format("《%s-%s》下载成功",name,title));
         return "0";
     }
