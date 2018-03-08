@@ -32,7 +32,7 @@ public class MoviesUtils {
 
             int timestamp = (int) (new Date().getTime() / 1000);
             String headerKey = "Proxy-Authorization";
-            String authHeader = authHeader(SystemConfig.getProperty("proxy.orderno"), SystemConfig.getProperty("proxy.secret"), timestamp);
+            String authHeader = authHeader(systemConfig.getProperty("proxy.orderno"), systemConfig.getProperty("proxy.secret"), timestamp);
 
             conn.setRequestProperty(headerKey,authHeader);
             //设置超时间为5秒
