@@ -148,11 +148,7 @@ public class MoviesPageProcessor implements PageProcessor {
             scheduler.push(new Request(searchUrl.replace("REPLACE_KEY", movies.getName()))
                     .addHeader("code", movies.getCode()).setPriority(1), spider);
         }
-        try {
-            spider.start();
-        } catch (Exception e) {
-            this.log.info("wocao!!!");
-        }
+        spider.thread(3).start();
         /*for (int i = 0; i < 10; i++) {
             scheduler.push(new Request(searchUrl.replace("REPLACE_KEY", moviesList.get(i).getName()))
                     .addHeader("code", moviesList.get(i).getCode()).setPriority(1), spider);
