@@ -1,5 +1,6 @@
 package com.lhp.crawler.utils;
 
+import com.lhp.crawler.model.Movies;
 import com.lhp.crawler.repository.MoviesRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +18,12 @@ import java.util.Date;
 @Slf4j
 @Component
 public class MoviesUtils {
+    @Autowired
+    MoviesRepository moviesRepository;
 
     SystemConfig systemConfig = new SystemConfig();
 
-    public static String downloadImg(String src, String name, String title)  {
+    public String downloadImg(String src, String code, String title)  {
         try {
             URL url = new URL("http:"+src);
             InetSocketAddress addr = new InetSocketAddress("forward.xdaili.cn", 80);
@@ -47,13 +50,8 @@ public class MoviesUtils {
             if(!saveDir.exists()){
                 saveDir.mkdir();
             }
-            String[] invalidCs = { "\\", "/", ":", "*", "?", "\"", "<", ">", "|", "”", "." };
-            for (String c : invalidCs) {
-                if (name.contains(String.valueOf(c))) {
-                    name = name.replace(c, "#");
-                }
-            }
-            File file = new File(saveDir+File.separator+name+".jpg");
+
+            File file = new File(saveDir+File.separator+code+".jpg");
 
             FileOutputStream fos = new FileOutputStream(file);
             fos.write(getData);
@@ -67,8 +65,10 @@ public class MoviesUtils {
             e.printStackTrace();
             return "-1";
         }
-        //todo:下载成功保存到数据库remark字段
-        MoviesUtils.log.info(String.format("《%s-%s》下载成功",name,title));
+        Movies movie = moviesRepository.findByCode(code);
+        movie.setRemarks("下载成功");
+        moviesRepository.save(movie);
+        MoviesUtils.log.info(String.format("《%s-%s》下载成功",code,title));
         return "0";
     }
 

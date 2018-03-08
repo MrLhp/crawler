@@ -109,7 +109,7 @@ public class MoviesPageProcessor implements PageProcessor {
                     moviesRepository.save(movie);
                 } else{
                     resMap.put(detailUrl, code);
-                    this.log.warn(String.format("日期年份不匹配：[%s]:[%s]", onDays, year));
+                    this.log.warn(String.format("解析字段与日期年份不匹配：[%s]:[%s]", onDays, year));
                 }
             } else {
                 this.log.info(String.format("剔除结果：《%s》与参数《%s》不匹配", mName, searchKeyName));

@@ -24,6 +24,8 @@ public class MoviesImgPageProcessor implements PageProcessor {
     @Autowired
     MoviesRepository moviesRepository;
 
+    MoviesUtils moviesUtils = new MoviesUtils();
+
     private int timestamp = (int) (new Date().getTime() / 1000);
     //设置代理参数
     private final String authHeader = authHeader(SystemConfig.getProperty("proxy.orderno"), SystemConfig.getProperty("proxy.secret"), timestamp);
@@ -45,7 +47,7 @@ public class MoviesImgPageProcessor implements PageProcessor {
         }
         final String src = movieImg.attr("src");
         final String title = movieImg.attr("alt");
-        String res = MoviesUtils.downloadImg(src, code, title);
+        String res = moviesUtils.downloadImg(src, code, title);
         if (res.equals("0")) {
             Movies movie = moviesRepository.findByCode(code);
             movie.setIsDownload(true);
