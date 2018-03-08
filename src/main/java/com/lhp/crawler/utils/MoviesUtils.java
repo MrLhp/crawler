@@ -65,9 +65,6 @@ public class MoviesUtils {
             e.printStackTrace();
             return "-1";
         }
-        Movies movie = moviesRepository.findByCode(code);
-        movie.setRemarks("下载成功");
-        moviesRepository.save(movie);
         MoviesUtils.log.info(String.format("《%s-%s》下载成功",code,title));
         return "0";
     }
